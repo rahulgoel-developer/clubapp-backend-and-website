@@ -240,7 +240,93 @@ curl -X POST https://rotary.rankstallion.com/members/add.php \
 ### POST `/members/update.php`
 **Access:** Admin only
 
-> ⏳ Coming soon
+Updates an existing member's details. Only fields included in the request are updated — missing fields are left unchanged.
+
+**Request Body:**
+```json
+{
+    "member_id": 3,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "newpassword123",
+    "country_code": "+91",
+    "phone": "9876543210",
+    "birth_date": "1990-05-15",
+    "anniversary_date": "2015-11-20",
+    "blood_group": "O+",
+    "country_code_2": "+91",
+    "phone_2": "9876500000",
+    "gender": "male",
+    "language": "English",
+    "introduction": "Updated intro",
+    "rotary_id": "ROT2024001",
+    "admission_date": "2024-01-01",
+    "facebook": "https://facebook.com/johndoe",
+    "instagram": "https://instagram.com/johndoe",
+    "linkedin": "https://linkedin.com/in/johndoe",
+    "twitter": "https://twitter.com/johndoe",
+    "youtube": "",
+    "website": "https://johndoe.com",
+    "address": "123 Main Street",
+    "state": "Punjab",
+    "city": "Chandigarh",
+    "zip_code": "160001",
+    "business": {
+        "business_name": "Doe Enterprises",
+        "business_email": "info@doe.com",
+        "designation": "Director",
+        "classification": "Technology",
+        "keywords": "software, IT",
+        "country_code": "+91",
+        "phone": "9876511111",
+        "address": "456 Business Park",
+        "state": "Punjab",
+        "city": "Chandigarh",
+        "zip_code": "160002"
+    },
+    "family_members": [
+        { "name": "Jane Doe", "relation": "spouse" },
+        { "name": "Tom Doe", "relation": "son" }
+    ]
+}
+```
+
+> **Note:** Only `member_id` is required. Send only the fields you want to update.  
+> Sending `family_members` replaces the entire existing family members list.  
+> Sending `business` updates if exists, creates if not.  
+> Photos are handled via separate upload endpoints.
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "message": "Member updated successfully"
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `400` | member_id is required |
+| `401` | Authorization token missing |
+| `403` | Access denied. Admins only |
+| `404` | Member not found |
+| `409` | Email already in use |
+| `500` | Failed to update member |
+
+**cURL Example:**
+```bash
+curl -X POST https://rotary.rankstallion.com/members/update.php \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+-d '{
+    "member_id": 3,
+    "city": "Mumbai",
+    "business": {
+        "designation": "Director"
+    }
+}'
+```
 
 ---
 
@@ -431,7 +517,7 @@ curl -X POST https://rotary.rankstallion.com/members/add.php \
 | Method | Endpoint | Access | Status |
 |--------|----------|--------|--------|
 | POST | `/members/add.php` | Admin | ✅ Done |
-| POST | `/members/update.php` | Admin | ⏳ Pending |
+| POST | `/members/update.php` | Admin | ✅ Done |
 | POST | `/members/delete.php` | Admin | ⏳ Pending |
 | GET | `/members/list.php` | Member | ⏳ Pending |
 | GET | `/members/view.php?id=1` | Member | ⏳ Pending |
@@ -509,7 +595,7 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
 │   └── logout.php           ✅
 ├── members/
 │   ├── add.php              ✅
-│   ├── update.php           ⏳
+│   ├── update.php           ✅
 │   ├── delete.php           ⏳
 │   ├── list.php             ⏳
 │   └── view.php             ⏳
