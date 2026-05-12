@@ -4,7 +4,7 @@
 **Content-Type:** `application/json`  
 **Authentication:** Bearer Token (JWT)
 
----
+***
 
 ## Authentication
 
@@ -16,7 +16,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 
 Access tokens expire in **15 minutes**. Use the refresh endpoint to get a new one without re-login.
 
----
+***
 
 ## Auth Endpoints
 
@@ -65,7 +65,7 @@ curl -X POST https://rotary.rankstallion.com/auth/login.php \
 -d '{"email":"rahul@example.com","password":"yourpassword"}'
 ```
 
----
+***
 
 ### POST `/auth/refresh.php`
 **Access:** Public
@@ -103,7 +103,7 @@ curl -X POST https://rotary.rankstallion.com/auth/refresh.php \
 -d '{"refresh_token":"YOUR_REFRESH_TOKEN"}'
 ```
 
----
+***
 
 ### POST `/auth/logout.php`
 **Access:** Member, Admin
@@ -130,7 +130,7 @@ curl -X POST https://rotary.rankstallion.com/auth/logout.php \
 -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
----
+***
 
 ## Members Endpoints
 
@@ -235,7 +235,7 @@ curl -X POST https://rotary.rankstallion.com/members/add.php \
 }'
 ```
 
----
+***
 
 ### POST `/members/update.php`
 **Access:** Admin only
@@ -328,28 +328,63 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 }'
 ```
 
----
+***
 
 ### POST `/members/delete.php`
 **Access:** Admin only
 
-> ⏳ Coming soon
+Permanently deletes a member along with their business and family member records.
 
----
+**Request Body:**
+```json
+{
+    "member_id": 3
+}
+```
+
+> **Note:** Admins cannot delete their own account.
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "message": "Member deleted successfully"
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `400` | member_id is required |
+| `401` | Authorization token missing |
+| `403` | Access denied. Admins only |
+| `403` | You cannot delete your own account |
+| `404` | Member not found |
+| `500` | Failed to delete member |
+
+**cURL Example:**
+```bash
+curl -X POST https://rotary.rankstallion.com/members/delete.php \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+-d '{"member_id": 3}'
+```
+
+***
 
 ### GET `/members/list.php`
 **Access:** Member, Admin
 
 > ⏳ Coming soon
 
----
+***
 
 ### GET `/members/view.php?id=1`
 **Access:** Member, Admin
 
 > ⏳ Coming soon
 
----
+***
 
 ## Events Endpoints
 
@@ -369,7 +404,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 **Access:** Member, Admin
 > ⏳ Coming soon
 
----
+***
 
 ## Updates Endpoints
 
@@ -385,7 +420,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 **Access:** Member, Admin
 > ⏳ Coming soon
 
----
+***
 
 ## Gallery Endpoints
 
@@ -401,7 +436,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 **Access:** Member, Admin
 > ⏳ Coming soon
 
----
+***
 
 ## Database Schema
 
@@ -502,7 +537,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 | `uploaded_by` | INT | Foreign key → users.id |
 | `created_at` | TIMESTAMP | Auto |
 
----
+***
 
 ## Endpoint Status
 
@@ -518,7 +553,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 |--------|----------|--------|--------|
 | POST | `/members/add.php` | Admin | ✅ Done |
 | POST | `/members/update.php` | Admin | ✅ Done |
-| POST | `/members/delete.php` | Admin | ⏳ Pending |
+| POST | `/members/delete.php` | Admin | ✅ Done |
 | GET | `/members/list.php` | Member | ⏳ Pending |
 | GET | `/members/view.php?id=1` | Member | ⏳ Pending |
 
@@ -544,7 +579,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 | POST | `/gallery/delete.php` | Admin | ⏳ Pending |
 | GET | `/gallery/list.php?event_id=1` | Member | ⏳ Pending |
 
----
+***
 
 ## Error Code Reference
 
@@ -558,7 +593,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php \
 | `409` | Conflict — e.g. duplicate email |
 | `500` | Internal Server Error |
 
----
+***
 
 ## Token Lifecycle
 
@@ -574,7 +609,7 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
     User must login again
 ```
 
----
+***
 
 ## Project Folder Structure
 
@@ -596,7 +631,7 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
 ├── members/
 │   ├── add.php              ✅
 │   ├── update.php           ✅
-│   ├── delete.php           ⏳
+│   ├── delete.php           ✅
 │   ├── list.php             ⏳
 │   └── view.php             ⏳
 ├── events/
@@ -614,6 +649,6 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
     └── list.php             ⏳
 ```
 
----
+***
 
 *Last updated: May 2026*
