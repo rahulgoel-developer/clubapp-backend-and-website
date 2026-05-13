@@ -2,3 +2,4 @@ config.php
 vendor/
 generate_token.php
 db.php
+roughwork.txt

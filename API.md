@@ -375,14 +375,133 @@ curl -X POST https://rotary.rankstallion.com/members/delete.php \
 ### GET `/members/list.php`
 **Access:** Member, Admin
 
-> ⏳ Coming soon
+Returns all members sorted A-Z by name. Includes summary fields and business designation via JOIN.
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "total": 2,
+    "members": [
+        {
+            "id": 3,
+            "name": "John Doe",
+            "profile_photo": null,
+            "country_code": "+91",
+            "phone": "9876543210",
+            "birth_date": "1990-05-15",
+            "blood_group": "O+",
+            "gender": "male",
+            "city": "Chandigarh",
+            "state": "Punjab",
+            "rotary_id": "ROT2024001",
+            "admission_date": "2024-01-01",
+            "designation": "CEO"
+        }
+    ]
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `401` | Authorization token missing |
+| `401` | Token expired |
+| `405` | Method not allowed |
+
+**cURL Example:**
+```bash
+curl -X GET https://rotary.rankstallion.com/members/list.php \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
 
 ***
 
 ### GET `/members/view.php?id=1`
 **Access:** Member, Admin
 
-> ⏳ Coming soon
+Returns the full profile of a single member including personal info, address, social links, business details, and family members.
+
+**Query Parameter:**
+| Param | Required | Description |
+|-------|----------|-------------|
+| `id` | Yes | Member's user ID |
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "member": {
+        "id": 3,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "profile_photo": null,
+        "rotary_id": "ROT2024001",
+        "admission_date": "2024-01-01",
+        "introduction": "Brief intro here",
+        "personal": {
+            "gender": "male",
+            "birth_date": "1990-05-15",
+            "anniversary_date": "2015-11-20",
+            "blood_group": "O+",
+            "language": "English",
+            "country_code": "+91",
+            "phone": "9876543210",
+            "country_code_2": "+91",
+            "phone_2": "9876500000"
+        },
+        "address": {
+            "address": "123 Main Street",
+            "city": "Chandigarh",
+            "state": "Punjab",
+            "zip_code": "160001"
+        },
+        "social": {
+            "facebook": "https://facebook.com/johndoe",
+            "instagram": "https://instagram.com/johndoe",
+            "linkedin": "https://linkedin.com/in/johndoe",
+            "twitter": "https://twitter.com/johndoe",
+            "youtube": null,
+            "website": "https://johndoe.com"
+        },
+        "business": {
+            "business_name": "Doe Enterprises",
+            "business_email": "info@doe.com",
+            "designation": "CEO",
+            "classification": "Technology",
+            "keywords": "software, IT, consulting",
+            "country_code": "+91",
+            "phone": "9876511111",
+            "address": "456 Business Park",
+            "city": "Chandigarh",
+            "state": "Punjab",
+            "zip_code": "160002"
+        },
+        "family": {
+            "family_photo": null,
+            "members": [
+                { "id": 1, "name": "Jane Doe", "relation": "spouse", "photo": null },
+                { "id": 2, "name": "Tom Doe", "relation": "son", "photo": null }
+            ]
+        }
+    }
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `400` | Member ID is required |
+| `401` | Authorization token missing |
+| `401` | Token expired |
+| `404` | Member not found |
+| `405` | Method not allowed |
+
+**cURL Example:**
+```bash
+curl -X GET "https://rotary.rankstallion.com/members/view.php?id=3" \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
 
 ***
 
@@ -554,8 +673,8 @@ curl -X POST https://rotary.rankstallion.com/members/delete.php \
 | POST | `/members/add.php` | Admin | ✅ Done |
 | POST | `/members/update.php` | Admin | ✅ Done |
 | POST | `/members/delete.php` | Admin | ✅ Done |
-| GET | `/members/list.php` | Member | ⏳ Pending |
-| GET | `/members/view.php?id=1` | Member | ⏳ Pending |
+| GET | `/members/list.php` | Member | ✅ Done |
+| GET | `/members/view.php?id=1` | Member | ✅ Done |
 
 ### Events
 | Method | Endpoint | Access | Status |
@@ -632,8 +751,8 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
 │   ├── add.php              ✅
 │   ├── update.php           ✅
 │   ├── delete.php           ✅
-│   ├── list.php             ⏳
-│   └── view.php             ⏳
+│   ├── list.php             ✅
+│   └── view.php             ✅
 ├── events/
 │   ├── add.php              ⏳
 │   ├── update.php           ⏳
