@@ -4,7 +4,7 @@
 **Content-Type:** `application/json`
 **Authentication:** Bearer Token (JWT)
 
-***
+---
 
 ## Authentication
 
@@ -16,7 +16,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 
 Access tokens expire in **15 minutes**. Use the refresh endpoint to get a new one without re-login.
 
-***
+---
 
 ## Auth Endpoints
 
@@ -65,7 +65,7 @@ curl -X POST https://rotary.rankstallion.com/auth/login.php ^
 -d "{\"email\":\"rahul@example.com\",\"password\":\"yourpassword\"}"
 ```
 
-***
+---
 
 ### POST `/auth/refresh.php`
 **Access:** Public
@@ -103,7 +103,7 @@ curl -X POST https://rotary.rankstallion.com/auth/refresh.php ^
 -d "{\"refresh_token\":\"YOUR_REFRESH_TOKEN\"}"
 ```
 
-***
+---
 
 ### POST `/auth/logout.php`
 **Access:** Member, Admin
@@ -130,7 +130,7 @@ curl -X POST https://rotary.rankstallion.com/auth/logout.php ^
 -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-***
+---
 
 ## Members Endpoints
 
@@ -216,7 +216,7 @@ curl -X POST https://rotary.rankstallion.com/members/add.php ^
 -d "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"secret123\",\"phone\":\"9876543210\",\"country_code\":\"+91\",\"birth_date\":\"1990-05-15\",\"blood_group\":\"O+\",\"gender\":\"male\",\"rotary_id\":\"ROT2024001\",\"business\":{\"business_name\":\"Doe Enterprises\",\"designation\":\"CEO\",\"city\":\"Chandigarh\"},\"family_members\":[{\"name\":\"Jane Doe\",\"relation\":\"spouse\"},{\"name\":\"Tom Doe\",\"relation\":\"son\"}]}"
 ```
 
-***
+---
 
 ### POST `/members/update.php`
 **Access:** Admin only
@@ -303,7 +303,7 @@ curl -X POST https://rotary.rankstallion.com/members/update.php ^
 -d "{\"member_id\":3,\"city\":\"Mumbai\",\"business\":{\"designation\":\"Director\"}}"
 ```
 
-***
+---
 
 ### POST `/members/delete.php`
 **Access:** Admin only
@@ -345,7 +345,7 @@ curl -X POST https://rotary.rankstallion.com/members/delete.php ^
 -d "{\"member_id\":3}"
 ```
 
-***
+---
 
 ### GET `/members/list.php`
 **Access:** Member, Admin
@@ -390,7 +390,7 @@ curl -X GET https://rotary.rankstallion.com/members/list.php ^
 -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-***
+---
 
 ### GET `/members/view.php?id=1`
 **Access:** Member, Admin
@@ -478,7 +478,7 @@ curl -X GET "https://rotary.rankstallion.com/members/view.php?id=3" ^
 -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-***
+---
 
 ## Events Endpoints
 
@@ -527,7 +527,7 @@ curl -X POST https://rotary.rankstallion.com/events/add.php ^
 -d "{\"title\":\"Annual Rotary Gala\",\"description\":\"Our annual fundraising dinner.\",\"event_date\":\"2024-12-25 18:00:00\",\"location\":\"Hotel Taj, Chandigarh\"}"
 ```
 
-***
+---
 
 ### POST `/events/update.php`
 **Access:** Admin only
@@ -574,17 +574,90 @@ curl -X POST https://rotary.rankstallion.com/events/update.php ^
 -d "{\"event_id\":1,\"location\":\"Hotel Lalit, Chandigarh\",\"event_date\":\"2024-12-26 19:00:00\"}"
 ```
 
-***
+---
 
 ### POST `/events/delete.php`
 **Access:** Admin only
-> ⏳ Coming soon
+
+Permanently deletes an event and all its related gallery photos.
+
+**Request Body:**
+```json
+{
+    "event_id": 1
+}
+```
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "message": "Event deleted successfully"
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `400` | event_id is required |
+| `401` | Authorization token missing |
+| `403` | Access denied. Admins only |
+| `404` | Event not found |
+| `405` | Method not allowed |
+| `500` | Failed to delete event |
+
+**cURL Example:**
+```bash
+curl -X POST https://rotary.rankstallion.com/events/delete.php ^
+-H "Content-Type: application/json" ^
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" ^
+-d "{\"event_id\":1}"
+```
+
+---
 
 ### GET `/events/list.php`
 **Access:** Member, Admin
-> ⏳ Coming soon
 
-***
+Returns all events sorted newest first by event date. Includes creator name via JOIN.
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "total": 2,
+    "events": [
+        {
+            "id": 1,
+            "title": "Annual Rotary Gala",
+            "description": "Our annual fundraising dinner.",
+            "event_date": "2024-12-25 18:00:00",
+            "location": "Hotel Taj, Chandigarh",
+            "featured_photo": null,
+            "created_at": "2024-11-01 10:00:00",
+            "created_by": {
+                "id": 1,
+                "name": "Rahul Goel"
+            }
+        }
+    ]
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `401` | Authorization token missing |
+| `401` | Token expired |
+| `405` | Method not allowed |
+
+**cURL Example:**
+```bash
+curl -X GET https://rotary.rankstallion.com/events/list.php ^
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+---
 
 ## Updates Endpoints
 
@@ -600,7 +673,7 @@ curl -X POST https://rotary.rankstallion.com/events/update.php ^
 **Access:** Member, Admin
 > ⏳ Coming soon
 
-***
+---
 
 ## Gallery Endpoints
 
@@ -616,7 +689,7 @@ curl -X POST https://rotary.rankstallion.com/events/update.php ^
 **Access:** Member, Admin
 > ⏳ Coming soon
 
-***
+---
 
 ## Database Schema
 
@@ -717,7 +790,7 @@ curl -X POST https://rotary.rankstallion.com/events/update.php ^
 | `uploaded_by` | INT | Foreign key → users.id |
 | `created_at` | TIMESTAMP | Auto |
 
-***
+---
 
 ## Endpoint Status
 
@@ -742,8 +815,8 @@ curl -X POST https://rotary.rankstallion.com/events/update.php ^
 |--------|----------|--------|--------|
 | POST | `/events/add.php` | Admin | ✅ Done |
 | POST | `/events/update.php` | Admin | ✅ Done |
-| POST | `/events/delete.php` | Admin | ⏳ Pending |
-| GET | `/events/list.php` | Member | ⏳ Pending |
+| POST | `/events/delete.php` | Admin | ✅ Done |
+| GET | `/events/list.php` | Member | ✅ Done |
 
 ### Updates
 | Method | Endpoint | Access | Status |
@@ -759,7 +832,7 @@ curl -X POST https://rotary.rankstallion.com/events/update.php ^
 | POST | `/gallery/delete.php` | Admin | ⏳ Pending |
 | GET | `/gallery/list.php?event_id=1` | Member | ⏳ Pending |
 
-***
+---
 
 ## Error Code Reference
 
@@ -773,7 +846,7 @@ curl -X POST https://rotary.rankstallion.com/events/update.php ^
 | `409` | Conflict — e.g. duplicate email |
 | `500` | Internal Server Error |
 
-***
+---
 
 ## Token Lifecycle
 
@@ -789,7 +862,7 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
     User must login again
 ```
 
-***
+---
 
 ## Project Folder Structure
 
@@ -817,8 +890,8 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
 ├── events/
 │   ├── add.php              ✅
 │   ├── update.php           ✅
-│   ├── delete.php           ⏳
-│   └── list.php             ⏳
+│   ├── delete.php           ✅
+│   └── list.php             ✅
 ├── updates/
 │   ├── add.php              ⏳
 │   ├── delete.php           ⏳
@@ -829,6 +902,6 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
     └── list.php             ⏳
 ```
 
-***
+---
 
 *Last updated: May 2026*
