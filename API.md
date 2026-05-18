@@ -663,15 +663,126 @@ curl -X GET https://rotary.rankstallion.com/events/list.php ^
 
 ### POST `/updates/add.php`
 **Access:** Admin only
-> ⏳ Coming soon
+
+Adds a new club update/announcement. Featured photo is handled via a separate upload endpoint.
+
+**Request Body:**
+```json
+{
+    "title": "New Club Announcement",
+    "content": "Meeting shifted to Friday."
+}
+```
+
+> **Note:** Only `title` is required. `content` is optional.
+> `featured_photo` is handled via a separate upload endpoint.
+> `posted_by` is auto-set from the JWT token.
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "message": "Update added successfully",
+    "update_id": 1
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `400` | Title is required |
+| `401` | Authorization token missing |
+| `403` | Access denied. Admins only |
+| `405` | Method not allowed |
+| `500` | Failed to add update |
+
+**cURL Example:**
+```bash
+curl -X POST https://rotary.rankstallion.com/updates/add.php ^
+-H "Content-Type: application/json" ^
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" ^
+-d "{\"title\":\"New Club Announcement\",\"content\":\"Meeting shifted to Friday.\"}"
+```
+
+---
 
 ### POST `/updates/delete.php`
 **Access:** Admin only
-> ⏳ Coming soon
+
+Permanently deletes a club update/announcement.
+
+**Request Body:**
+```json
+{
+    "update_id": 1
+}
+```
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "message": "Update deleted successfully"
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `400` | update_id is required |
+| `401` | Authorization token missing |
+| `403` | Access denied. Admins only |
+| `404` | Update not found |
+| `405` | Method not allowed |
+
+**cURL Example:**
+```bash
+curl -X POST https://rotary.rankstallion.com/updates/delete.php ^
+-H "Content-Type: application/json" ^
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" ^
+-d "{\"update_id\":1}"
+```
+
+---
 
 ### GET `/updates/list.php`
 **Access:** Member, Admin
-> ⏳ Coming soon
+
+Returns all updates sorted newest first. Includes poster name via JOIN.
+
+**Success Response `200`:**
+```json
+{
+    "success": true,
+    "total": 2,
+    "updates": [
+        {
+            "id": 1,
+            "title": "New Club Announcement",
+            "content": "Meeting shifted to Friday.",
+            "featured_photo": null,
+            "created_at": "2024-11-01 10:00:00",
+            "posted_by": {
+                "id": 1,
+                "name": "Rahul Goel"
+            }
+        }
+    ]
+}
+```
+
+**Error Responses:**
+| Code | Message |
+|------|---------|
+| `401` | Authorization token missing |
+| `401` | Token expired |
+| `405` | Method not allowed |
+
+**cURL Example:**
+```bash
+curl -X GET https://rotary.rankstallion.com/updates/list.php ^
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
 
 ---
 
@@ -821,9 +932,9 @@ curl -X GET https://rotary.rankstallion.com/events/list.php ^
 ### Updates
 | Method | Endpoint | Access | Status |
 |--------|----------|--------|--------|
-| POST | `/updates/add.php` | Admin | ⏳ Pending |
-| POST | `/updates/delete.php` | Admin | ⏳ Pending |
-| GET | `/updates/list.php` | Member | ⏳ Pending |
+| POST | `/updates/add.php` | Admin | ✅ Done |
+| POST | `/updates/delete.php` | Admin | ✅ Done |
+| GET | `/updates/list.php` | Member | ✅ Done |
 
 ### Gallery
 | Method | Endpoint | Access | Status |
@@ -893,9 +1004,9 @@ Login → Access Token (15 min) + Refresh Token (2 weeks)
 │   ├── delete.php           ✅
 │   └── list.php             ✅
 ├── updates/
-│   ├── add.php              ⏳
-│   ├── delete.php           ⏳
-│   └── list.php             ⏳
+│   ├── add.php              ✅
+│   ├── delete.php           ✅
+│   └── list.php             ✅
 └── gallery/
     ├── add.php              ⏳
     ├── delete.php           ⏳
